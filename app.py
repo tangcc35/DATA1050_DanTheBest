@@ -1,8 +1,9 @@
-
 # -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+
+print(dash.__version__)
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
