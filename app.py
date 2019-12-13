@@ -9,15 +9,24 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+#html and dcc are components
 app.layout = html.Div(children=[
+    # html.H1: big word
+    # children can be omitted, Also, it can contain a string, a number, a single component, or a list of components.
     html.H1(children='Hello Dash'),
 
+    # html.Div: small words
     html.Div(children='''
         Dash: A web application framework for Python.
     '''),
 
+    html.Div(children='''
+        We all like Dash.
+    '''),
+
     dcc.Graph(
         id='example-graph',
+        # name is for legend
         figure={
             'data': [
                 {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
