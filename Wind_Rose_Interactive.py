@@ -25,7 +25,7 @@ app.layout = html.Div([
     [dash.dependencies.Input('wind-rose-slider', 'value')])
 def wind_rose(day):
     cond = df["sol_day"] == str(day)
-    wind_data = df["wind"][cond].to_dict()[day - 365]
+    wind_data = df["wind"][cond].to_dict()[day % 365]
     df_wind = pd.DataFrame.from_dict(wind_data, orient="index")
     fig = px.bar_polar(df_wind, r="ct", theta="compass_degrees",  
                        color_discrete_sequence= px.colors.sequential.Plasma[-2::-1], 
