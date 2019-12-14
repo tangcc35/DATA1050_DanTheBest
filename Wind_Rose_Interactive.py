@@ -24,17 +24,16 @@ app.layout = html.Div([
     dash.dependencies.Output('what-if-figure', 'figure'),
     [dash.dependencies.Input('wind-rose-slider', 'value')])
 def wind_rose(day):
-    cond = df["sol_day"] == str(day)
-    wind_data = df["wind"][cond].to_dict()[day % 365]
-    df_wind = pd.DataFrame.from_dict(wind_data, orient="index")
+    df = read_data()
+    df_wind = pd.DataFrame.from_dict(df["wind"][df["sol_day"] == str(day)].values[0], orient='index')
     fig = px.bar_polar(df_wind, r="ct", theta="compass_degrees",  
                        color_discrete_sequence= px.colors.sequential.Plasma[-2::-1], 
                        width=600, height=600)
     fig.update_layout(
         title={
-            'text': f"Wind Rose Chart of Sol Day {str(day)}",
+            'text': f"Wind Rose Chart of Sol Day {day}",
             'y':0.98,
-            'x':0.53,
+            'x':0.52,
             'xanchor': 'center',
             'yanchor': 'top'})
 
