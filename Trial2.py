@@ -6,11 +6,12 @@ import plotly.express as px
 write_data()
 day = 366
 df = read_data()
+print(df.head())
 print(df['sol_day'][1])
 cond = df["sol_day"] == str(day)
 wind_data = df["wind"][cond].to_dict()[day - 365]
 df_wind = pd.DataFrame.from_dict(wind_data, orient="index")
-
+print(df_wind)
 
 fig = px.bar_polar(df_wind, r="ct", theta="compass_degrees",  
                        color_discrete_sequence= px.colors.sequential.Plasma[-2::-1], 
