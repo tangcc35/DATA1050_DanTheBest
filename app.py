@@ -2,14 +2,20 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
+import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
+pio.templates.default = "plotly_dark"
 
-from database import fetch_all_bpa_as_df
+from read_data import read_data
+from write_data import write_data
 
 # Definitions of constants. This projects uses extra CSS stylesheet at `./assets/style.css`
 COLORS = ['rgb(67,67,67)', 'rgb(115,115,115)', 'rgb(49,130,189)', 'rgb(189,189,189)']
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', '/assets/style.css']
 
+df = read_data()
 # Define the dash app first
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -39,7 +45,7 @@ def description():
     Returns overall project description in markdown
     """
     
-    # TODO: Change description below
+    # TODO: Change description markdown below
     return html.Div(children=[dcc.Markdown('''
         # Energy Planner
         As of today, 138 cities in the U.S. have formally announced 100% renewable energy goals or
@@ -63,6 +69,7 @@ def description():
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
 
+# TODO: later
 def static_stacked_trend_graph(stack=False):
     """
     Returns scatter line plot of all power sources and power load.
@@ -70,8 +77,8 @@ def static_stacked_trend_graph(stack=False):
     production.
     """
     
-    # TODO: Change function of fetch_all_bpa_as_df()
-    df = fetch_all_bpa_as_df()
+    write_data()
+    df = read_data()
     if df is None:
         return go.Figure()
     sources = ['Wind', 'Hydro', 'Fossil/Biomass', 'Nuclear']
@@ -100,6 +107,7 @@ def what_if_description():
     Returns description of "What-If" - the interactive component
     """
     return html.Div(children=[
+        # TODO: change the articles below
         dcc.Markdown('''
         # " What If "
         So far, BPA has been relying on hydro power to balance the demand and supply of power. 
@@ -122,18 +130,18 @@ def what_if_tool():
         html.Div(children=[dcc.Graph(id='what-if-figure')], className='nine columns'),
 
         html.Div(children=[
-            html.H5("Rescale Power Supply", style={'marginTop': '2rem'}),
-            html.Div(children=[
-                dcc.Slider(id='wind-scale-slider', min=0, max=4, step=0.1, value=2.5, className='row',
-                           marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '5rem'}),
-
-            html.Div(id='wind-scale-text', style={'marginTop': '1rem'}),
+            html.H5("Days Ahead", style={'marginTop': '2rem'}),
 
             html.Div(children=[
-                dcc.Slider(id='hydro-scale-slider', min=0, max=4, step=0.1, value=0,
+                dcc.Slider(id='weather-predictor-slider', min=1, max=5, step=1, value=0,
                            className='row', marks={x: str(x) for x in np.arange(0, 4.1, 1)})
             ], style={'marginTop': '3rem'}),
+
+            html.Div(children=[
+                dcc.Slider(id='wind-rose-slider', min=int(df['sol_day'][0]), max=int(df['sol_day'][6]), value = int(df['sol_day'][0]), step=1, 
+                            marks={df['sol_day'][i] :df['sol_day'][i] for i in [0,1,2,3,4,5,6]})
+            ], style={'marginTop': '3rem'}),
+
             html.Div(id='hydro-scale-text', style={'marginTop': '1rem'}),
         ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
     ], className='row eleven columns')
@@ -144,6 +152,7 @@ def architecture_summary():
     Returns the text and image of architecture summary of the project.
     """
     return html.Div(children=[
+        # TODO: change the articles below
         dcc.Markdown('''
             # Project Architecture
             This project uses MongoDB as the database. All data acquired are stored in raw form to the
@@ -173,7 +182,7 @@ app.layout = html.Div([
     html.Hr(),
     description(),
     # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
-    dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
+    # dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
     what_if_description(),
     what_if_tool(),
     architecture_summary(),
@@ -181,14 +190,6 @@ app.layout = html.Div([
 
 
 # Defines the dependencies of interactive components
-
-@app.callback(
-    dash.dependencies.Output('wind-scale-text', 'children'),
-    [dash.dependencies.Input('wind-scale-slider', 'value')])
-def update_wind_sacle_text(value):
-    """Changes the display text of the wind slider"""
-    return "Wind Power Scale {:.2f}x".format(value)
-
 
 @app.callback(
     dash.dependencies.Output('hydro-scale-text', 'children'),
@@ -203,25 +204,23 @@ _what_if_data_cache = None
 
 @app.callback(
     dash.dependencies.Output('what-if-figure', 'figure'),
-    [dash.dependencies.Input('wind-scale-slider', 'value'),
-     dash.dependencies.Input('hydro-scale-slider', 'value')])
-def what_if_handler(wind, hydro):
-    """Changes the display graph of supply-demand"""
-    df = fetch_all_bpa_as_df(allow_cached=True)
-    x = df['Datetime']
-    supply = df['Wind'] * wind + df['Hydro'] * hydro + df['Fossil/Biomass'] + df['Nuclear']
-    load = df['Load']
+    [dash.dependencies.Input('wind-rose-slider', 'value')])
+def wind_rose(day):
+    cond = df["sol_day"] == str(day)
+    wind_data = df["wind"][cond].to_dict()[day - 365]
+    df_wind = pd.DataFrame.from_dict(wind_data, orient="index")
+    fig = px.bar_polar(df_wind, r="ct", theta="compass_degrees",  
+                       color_discrete_sequence= px.colors.sequential.Plasma[-2::-1], 
+                       width=600, height=600)
+    fig.update_layout(
+        title={
+            'text': f"Wind Rose Chart of Sol Day {str(day)}",
+            'y':0.98,
+            'x':0.53,
+            'xanchor': 'center',
+            'yanchor': 'top'})
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=supply, mode='none', name='supply', line={'width': 2, 'color': 'pink'},
-                  fill='tozeroy'))
-    fig.add_trace(go.Scatter(x=x, y=load, mode='none', name='demand', line={'width': 2, 'color': 'orange'},
-                  fill='tonexty'))
-    fig.update_layout(template='plotly_dark', title='Supply/Demand after Power Scaling',
-                      plot_bgcolor='#23272c', paper_bgcolor='#23272c', yaxis_title='MW',
-                      xaxis_title='Date/Time')
     return fig
-
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=1050, host='0.0.0.0')
