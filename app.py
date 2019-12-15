@@ -54,48 +54,37 @@ def description():
     """
     Returns overall project description in markdown
     """
-    
-    # TODO: Change description markdown below
     return html.Div(children=[dcc.Markdown('''
         ### Why Mars
         Mars preserves the record of its formation and can give us insight into how the terrestrial planets formed. 
-        It is the perfect laboratory to study the formation and evolution of rocky planets. In this project, we focus on InSight, 
+        It is the perfect laboratory to study the formation and evolution of rocky planets. 
+        In this project, we focus on [InSight](https://mars.nasa.gov/insight/), 
         a mission conducted by NASA to study the crust, mantle, and core of Mars. We collect the data of daily weather measurements 
         (temperature, pressure) on the surface of Mars at Elysium Planitia, a flat, smooth plain near Mars’ equator.  
           
 
         ### Our Goals
-        # TODO: Change goals
-        Given the historical data of weather on Mars, we want to provide useful  analyzed wind directions of previous seven sol days, and predicted 
-        the atmosphere temperature and pressure 1 to 3 days 
-        from now. At the end of the project, we are expected to gain insights into the weather patterns of Mars and to generate predictions 
-        of the weather on Mars to provide more convenience for astronauts, detectors and astronomical research.  
+        Given historical data of weather on Mars, we want to provide useful information to Mars rovers and future astronauts. 
+        To analyze wind directions, rose charts are made for the past seven days, 
+        min, max atmosphere temperatures and air pressure are predicted 
+        1 to 5 days from now, depending on users. Our analysis and predictions can provide convenience for astronauts, 
+        detectors and astronomical research.  
           
 
         ### Data Source
-        We use API to collect data of the weather in the last 7 Sols (unit of Martian Day) on Mars from the [website](https://api.nasa.gov/). 
+        We use [NASA's API](https://api.nasa.gov/) to collect weather data in the last 7 sol days. 
         For each day, the variables we concentrate on are the maximum temperature, the minimum temperature, the average atmospheric pressure, 
-        the wind direction, and the horizontal wind speed. The data source updates once per day. Summary of the data is below:
-        **updates every 24 hours 37 minutes**. 
+        and the wind direction. The data source updates once per **sol day**, or 24 hours 37 minutes. 
+        Summary of the data is below:
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
-def what_if_description():
+def wind_description():
     """
-    Returns description of "What-If" - the interactive component
+    Returns description of "wind" - the interactive component
     """
     return html.Div(children=[
-        # TODO: change the articles below
         dcc.Markdown('''
-        ### Predictions and Results:
-        We use vector autoregression to make the predictions. Each of the graph includes the historical data and the prediction of 
-        the max temperature, the minimum temperature, and the average atmospheric pressure respectively. 
-        The solid line records the historical data, while the dashed line shows the predictions. 
-        We can also change the prediction interval by moving the slider horizontally. 
-        Another thing we need to notice is that the band around the dashed line presents the 95% confidence interval of the predictions. 
-        It gets wider as there exists more uncertainty into the farther future.  
-
-
-        ### Visualization
+        ### Wind Direction Analysis
         We use a rose chart to present the wind direction and the number of times it blows for each direction on a given day. 
         The degree of an angle is the direction from which the wind blows to. The numbers on the inner circles show the number of 
         times the wind blows in the corresponding directions. We can move the slider to switch to the day we are curious of.
@@ -103,7 +92,24 @@ def what_if_description():
     ], className="row")
 
 
-def what_if_tool():
+def pred_description():
+    """
+    Returns description of "pred" - the interactive component
+    """
+    return html.Div(children=[
+        dcc.Markdown('''
+        ### Predictions and Results:
+        We use vector autoregression to make the predictions. Each of the graph includes the historical weather of the past 7 days 
+        and the prediction of the max, min temperature, and the average atmospheric pressure respectively. 
+        The solid line records the historical data, while the dashed line shows the predictions. 
+        The band around the dashed line presents the 95% confidence interval of the predictions. 
+        It gets wider as there exists more uncertainty into the farther future.  
+        We can also adjust the predicted days ahead by moving the slider horizontally. 
+        ''', className='eleven columns', style={'paddingLeft': '5%'})
+    ], className="row")
+
+
+def wind_tool():
     """
     Returns the What-If tool as a dash `html.Div`. The view is a 8:3 division between
     demand-supply plot and rescale sliders.
@@ -121,16 +127,24 @@ def what_if_tool():
             ], style={'marginTop': '3rem', 'marginLeft': 10})
         ], className='five columns', style={'marginLeft': 5, 'marginTop': '10%'}),
 
+    ], className='row eleven columns')
+
+
+def pred_tool():
+    """
+    Returns figure of prediction
+    """
+    return html.Div(children=[
+
+        
         html.Div(children=[
-            html.H5("Weather Prediction", style={'marginTop': '2rem'}),
-            html.H5("Days Ahead", style={'marginTop': '2rem'}),
+            html.H5("Days Ahead", style={'marginLeft': 60}),
 
             html.Div(children=[
                 dcc.Slider(id='predictor-slider', min=0, max=5, value = 1, step=1,
                             marks={str(i): str(i) for i in [0,1,2,3,4,5]})
-            ], style={'marginTop': '3rem'}),
-        ], className='row eleven columns'),
-        #className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}
+            ], style={'marginTop': '3rem'}, className='row fifteen columns'),
+        ], className='row eleven columns', style={'marginLeft': 5}),
 
         html.Div(children=[dcc.Graph(id='predictor-figure')], className='nine columns'),
 
@@ -142,7 +156,6 @@ def architecture_summary():
     Returns the text and image of architecture summary of the project.
     """
     return html.Div(children=[
-        # TODO: change the articles below
         dcc.Markdown('''
             ### Project Architecture
             This project uses MongoDB as the database. All data acquired are stored in raw form to the
@@ -152,7 +165,6 @@ def architecture_summary():
             through. Actions on responsive components on the page is redirected to `app.py` which will
             then update certain components on the page.  
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
-
         html.Div(children=[
             html.Img(src="https://docs.google.com/drawings/d/e/2PACX-1vQNerIIsLZU2zMdRhIl3ZZkDMIt7jhE_fjZ6ZxhnJ9bKe1emPcjI92lT5L7aZRYVhJgPZ7EURN0AqRh/pub?w=670&amp;h=457",
                      className='row'),
@@ -180,8 +192,10 @@ app.layout = html.Div([
     html.Hr(),
     description(),
     summary_plot(),
-    what_if_description(),
-    what_if_tool(),
+    wind_description(),
+    wind_tool(),
+    pred_description(), 
+    pred_tool(), 
     architecture_summary(),
 ], className='row', id='content')
 
