@@ -46,7 +46,8 @@ def page_header():
         Guanzhong Chen, 
         Zhujun Shen, 
         Jiayuan Tian, 
-        [About Page](https://docs.google.com/document/d/1k4v4rgel3_xJdulQ0ch_x7ybQcCo2DULQ81QOnYUShU/edit)
+        [About Page](https://docs.google.com/document/d/1k4v4rgel3_xJdulQ0ch_x7ybQcCo2DULQ81QOnYUShU/edit), 
+        [Additional Details](https://docs.google.com/document/d/1ztmaKsTEHFcuWXogOkY0E5_xIqKExCwjNa8uwKpp-9w/edit)
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
     ], className="row")
 
@@ -57,7 +58,7 @@ def description():
     """
     return html.Div(children=[dcc.Markdown('''
         ### Why Mars
-        Mars preserves the record of its formation and can give us insight into how the terrestrial planets formed. 
+        Mars preserves the record of its formation and can give us insight into how the terrestrial planets form. 
         It is the perfect laboratory to study the formation and evolution of rocky planets. 
         In this project, we focus on [InSight](https://mars.nasa.gov/insight/), 
         a mission conducted by NASA to study the crust, mantle, and core of Mars. We collect the data of daily weather measurements 
@@ -69,12 +70,12 @@ def description():
         To analyze wind directions, rose charts are made for the past seven days, 
         min, max atmosphere temperatures and air pressure are predicted 
         1 to 5 days from now, depending on users. Our analysis and predictions can provide convenience for astronauts, 
-        detectors and astronomical research.  
+        detectors, rovers and astronomical research.  
           
 
         ### Data Source
         We use [NASA's API](https://api.nasa.gov/) to collect weather data in the last 7 sol days. 
-        For each day, the variables we concentrate on are the maximum temperature, the minimum temperature, the average atmospheric pressure, 
+        For each day, the variables we concentrate on are **maximum temperature**, **minimum temperature**, **average atmospheric pressure**, 
         and the wind direction. The data source updates once per **sol day**, or 24 hours 37 minutes. 
         Summary of the data is below:
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
@@ -87,8 +88,8 @@ def wind_description():
         dcc.Markdown('''
         ### Wind Direction Analysis
         We use a rose chart to present the wind direction and the number of times it blows for each direction on a given day. 
-        The degree of an angle is the direction from which the wind blows to. The numbers on the inner circles show the number of 
-        times the wind blows in the corresponding directions. We can move the slider to switch to the day we are curious of.
+        The degree of an angle is the direction from which the wind blows to. The numbers on the inner circles represent the number of 
+        times wind blows in the corresponding directions. Users can move the slider to switch to the day they are curious of.
         ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
@@ -100,19 +101,20 @@ def pred_description():
     return html.Div(children=[
         dcc.Markdown('''
         ### Predictions and Results:
-        We use vector autoregression to make the predictions. Each of the graph includes the historical weather of the past 7 days 
+        We use vector autoregression to make predictions. Each of the graph includes historical weather of the past 7 days 
         and the prediction of the max, min temperature, and the average atmospheric pressure respectively. 
         The solid line records the historical data, while the dashed line shows the predictions. 
-        The band around the dashed line presents the 95% confidence interval of the predictions. 
+        The band around the dashed line presents a 95% confidence interval for each prediction. 
         It gets wider as there exists more uncertainty into the farther future.  
-        User adjust the predicted days ahead by moving the slider horizontally. 
+
+        User can adjust the predicted days ahead by moving the slider horizontally. 
         ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
 
 def wind_tool():
     """
-    Returns the What-If tool as a dash `html.Div`. The view is a 8:3 division between
+    Returns the wind_tool as a dash `html.Div`. The view is a 8:3 division between
     demand-supply plot and rescale sliders.
     """
     return html.Div(children=[
@@ -160,14 +162,13 @@ def architecture_summary():
         dcc.Markdown('''
             ### Project Architecture
             This project uses MongoDB as the database. All data acquired are stored in raw form to the
-            database (with de-duplication). An abstract layer is built in `database.py` so all queries
-            can be done via function call. For a more complicated app, the layer will also be
-            responsible for schema consistency. A `plot.ly` & `dash` app is serving this web page
+            database (with de-duplication). An abstract layer is built in `write_data.py` so all queries
+            can be done via function call. A `plot.ly` & `dash` app is serving this web page
             through. Actions on responsive components on the page is redirected to `app.py` which will
             then update certain components on the page.  
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
         html.Div(children=[
-            html.Img(src="https://docs.google.com/drawings/d/e/2PACX-1vQNerIIsLZU2zMdRhIl3ZZkDMIt7jhE_fjZ6ZxhnJ9bKe1emPcjI92lT5L7aZRYVhJgPZ7EURN0AqRh/pub?w=670&amp;h=457",
+            html.Img(src="https://docs.google.com/drawings/d/e/2PACX-1vTG-QXYlQb4kUN9E4EsvIaPP4P0J1y_YCznVR_-jnyRdqCavLXgHN0DKc_jJWQ1vzsI8AkwKwaVWh51/pub?w=670&h=457",
                      className='row'),
         ], className='row', style={'textAlign': 'center'}),
 
