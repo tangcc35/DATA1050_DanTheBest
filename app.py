@@ -104,7 +104,7 @@ def pred_description():
         The solid line records the historical data, while the dashed line shows the predictions. 
         The band around the dashed line presents the 95% confidence interval of the predictions. 
         It gets wider as there exists more uncertainty into the farther future.  
-        We can also adjust the predicted days ahead by moving the slider horizontally. 
+        User adjust the predicted days ahead by moving the slider horizontally. 
         ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
