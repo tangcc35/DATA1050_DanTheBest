@@ -31,8 +31,8 @@ def page_header():
     Returns the page header as a dash `html.Div`
     """
     return html.Div(id='header', children=[
-        html.Div([html.H3('How\'s weather on Mars')],
-                 className="ten columns"),
+        html.Div([html.H3('How\'s the weather on Mars')],
+                 className="ten columns", style={'color': '#5DBCD2'}),
         html.A([html.Img(id='logo', src=app.get_asset_url('github.png'),
                          style={'height': '35px', 'paddingTop': '7%'}),
                 html.Span('MarsWeather', style={'fontSize': '2rem', 'height': '35px', 'bottom': 0,
@@ -57,16 +57,18 @@ def description():
     
     # TODO: Change description markdown below
     return html.Div(children=[dcc.Markdown('''
-        # Why Mars
+        ### Why Mars
         Mars preserves the record of its formation and can give us insight into how the terrestrial planets formed. 
         It is the perfect laboratory to study the formation and evolution of rocky planets. In this project, we focus on InSight, 
         a mission conducted by NASA to study the crust, mantle, and core of Mars. We collect the data of daily weather measurements 
-        (temperature, pressure) on the surface of Mars at Elysium Planitia, a flat, smooth plain near Mars’ equator.
+        (temperature, pressure) on the surface of Mars at Elysium Planitia, a flat, smooth plain near Mars’ equator.  
+          
 
         ### Our Goals
         Given the historical data of weather on Mars, we want to be able to predict the atmosphere temperature and pressure 1 to 3 days 
         from now. At the end of the project, we are expected to gain insights into the weather patterns of Mars and to generate predictions 
-        of the weather on Mars to provide more convenience for astronauts, detectors and astronomical research.
+        of the weather on Mars to provide more convenience for astronauts, detectors and astronomical research.  
+          
 
         ### Data Source
         We use API to collect data of the weather in the last 7 Sols (unit of Martian Day) on Mars from the [website](https://api.nasa.gov/). 
@@ -82,15 +84,16 @@ def what_if_description():
     return html.Div(children=[
         # TODO: change the articles below
         dcc.Markdown('''
-        # Predictions and Results:
+        ### Predictions and Results:
         We use vector autoregression to make the predictions. Each of the graph includes the historical data and the prediction of 
         the max temperature, the minimum temperature, and the average atmospheric pressure respectively. 
         The solid line records the historical data, while the dashed line shows the predictions. 
         We can also change the prediction interval by moving the slider horizontally. 
         Another thing we need to notice is that the band around the dashed line presents the 95% confidence interval of the predictions. 
-        It gets wider as there exists more uncertainty into the farther future.
+        It gets wider as there exists more uncertainty into the farther future.  
 
-        # Visualization
+
+        ### Visualization
         We use a rose chart to present the wind direction and the number of times it blows for each direction on a given day. 
         The degree of an angle is the direction from which the wind blows to. The numbers on the inner circles show the number of 
         times the wind blows in the corresponding directions. We can move the slider to switch to the day we are curious of.
@@ -139,7 +142,7 @@ def architecture_summary():
     return html.Div(children=[
         # TODO: change the articles below
         dcc.Markdown('''
-            # Project Architecture
+            ### Project Architecture
             This project uses MongoDB as the database. All data acquired are stored in raw form to the
             database (with de-duplication). An abstract layer is built in `database.py` so all queries
             can be done via function call. For a more complicated app, the layer will also be
