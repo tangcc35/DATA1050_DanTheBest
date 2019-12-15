@@ -50,25 +50,22 @@ def description():
     
     # TODO: Change description markdown below
     return html.Div(children=[dcc.Markdown('''
-        # Energy Planner
-        As of today, 138 cities in the U.S. have formally announced 100% renewable energy goals or
-        targets, while others are actively considering similar goals. Despite ambition and progress,
-        conversion towards renewable energy remains challenging.
+        # Why Mars
+        Mars preserves the record of its formation and can give us insight into how the terrestrial planets formed. 
+        It is the perfect laboratory to study the formation and evolution of rocky planets. In this project, we focus on InSight, 
+        a mission conducted by NASA to study the crust, mantle, and core of Mars. We collect the data of daily weather measurements 
+        (temperature, pressure) on the surface of Mars at Elysium Planitia, a flat, smooth plain near Mars’ equator.
 
-        Wind and solar power are becoming more cost effective, but they will always be unreliable
-        and intermittent sources of energy. They follow weather patterns with potential for lots of
-        variability. Solar power starts to die away right at sunset, when one of the two daily peaks
-        arrives (see orange curve for load).
-
-        **Energy Planner is a "What-If" tool to assist making power conversion plans.**
-        It can be used to explore load satisfiability under different power contribution with 
-        near-real-time energy production & consumption data.
+        ### Our Goals
+        Given the historical data of weather on Mars, we want to be able to predict the atmosphere temperature and pressure 1 to 3 days 
+        from now. At the end of the project, we are expected to gain insights into the weather patterns of Mars and to generate predictions 
+        of the weather on Mars to provide more convenience for astronauts, detectors and astronomical research.
 
         ### Data Source
-        Energy Planner utilizes near-real-time energy production & consumption data from [BPA 
-        Balancing Authority](https://www.bpa.gov/news/AboutUs/Pages/default.aspx).
-        The [data source](https://transmission.bpa.gov/business/operations/Wind/baltwg.aspx) 
-        **updates every 5 minutes**. 
+        We use API to collect data of the weather in the last 7 Sols (unit of Martian Day) on Mars from the [website](https://api.nasa.gov/). 
+        For each day, the variables we concentrate on are the maximum temperature, the minimum temperature, the average atmospheric pressure, 
+        the wind direction, and the horizontal wind speed. The data source updates once per day. Summary of the data is below:
+        **updates every 24 hours 37 minutes**. 
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
 def what_if_description():
@@ -78,14 +75,18 @@ def what_if_description():
     return html.Div(children=[
         # TODO: change the articles below
         dcc.Markdown('''
-        # " What If "
-        So far, BPA has been relying on hydro power to balance the demand and supply of power. 
-        Could our city survive an outage of hydro power and use up-scaled wind power as an
-        alternative? Find below **what would happen with 2.5x wind power and no hydro power at 
-        all**.   
-        Feel free to try out more combinations with the sliders. For the clarity of demo code,
-        only two sliders are included here. A fully-functioning What-If tool should support
-        playing with other interesting aspects of the problem (e.g. instability of load).
+        # Predictions and Results:
+        We use vector autoregression to make the predictions. Each of the graph includes the historical data and the prediction of 
+        the max temperature, the minimum temperature, and the average atmospheric pressure respectively. 
+        The solid line records the historical data, while the dashed line shows the predictions. 
+        We can also change the prediction interval by moving the slider horizontally. 
+        Another thing we need to notice is that the band around the dashed line presents the 95% confidence interval of the predictions. 
+        It gets wider as there exists more uncertainty into the farther future.
+
+        # Visualization
+        We use a rose chart to present the wind direction and the number of times it blows for each direction on a given day. 
+        The degree of an angle is the direction from which the wind blows to. The numbers on the inner circles show the number of 
+        times the wind blows in the corresponding directions. We can move the slider to switch to the day we are curious of.
         ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
