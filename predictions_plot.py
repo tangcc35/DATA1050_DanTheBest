@@ -105,7 +105,7 @@ def predict_plots(step, df):
     fig.update_xaxes(title_text="Sol Day", row=3, col=1)
     fig.update_yaxes(title_text="Pascal", row=3, col=1)
     
-    fig.update_layout(width=1200, height=620, plot_bgcolor='#23272c', paper_bgcolor='#23272c')
+    fig.update_layout(width=1200, height=600, plot_bgcolor='#23272c', paper_bgcolor='#23272c')
     
     return fig
  
