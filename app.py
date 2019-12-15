@@ -165,7 +165,7 @@ def architecture_summary():
             database (with de-duplication). An abstract layer is built in `write_data.py` so all queries
             can be done via function call. A `plot.ly` & `dash` app is serving this web page
             through. Actions on responsive components on the page is redirected to `app.py` which will
-            then update certain components on the page.  
+            then update certain components on the page. Creadit: [Martin Ma](https://github.com/blownhither)  
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
         html.Div(children=[
             html.Img(src="https://docs.google.com/drawings/d/e/2PACX-1vTG-QXYlQb4kUN9E4EsvIaPP4P0J1y_YCznVR_-jnyRdqCavLXgHN0DKc_jJWQ1vzsI8AkwKwaVWh51/pub?w=670&h=457",
