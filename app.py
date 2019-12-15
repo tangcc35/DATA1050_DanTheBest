@@ -31,7 +31,7 @@ def page_header():
     Returns the page header as a dash `html.Div`
     """
     return html.Div(id='header', children=[
-        html.Div([html.H3('Visualization with datashader and Plotly')],
+        html.Div([html.H3('How\'s weather on Mars')],
                  className="ten columns"),
         html.A([html.Img(id='logo', src=app.get_asset_url('github.png'),
                          style={'height': '35px', 'paddingTop': '7%'}),
@@ -40,6 +40,13 @@ def page_header():
                                                 'textDecoration': 'none'})],
                className="two columns row",
                href='https://github.com/tangcc35/DATA1050_DanTheBest'),
+        html.Div(children=[dcc.Markdown('''
+        ---- DanTheBest: 
+        Cangcheng Tang, 
+        Guanzhong Chen, 
+        Zhujun Shen, 
+        Jiayuan Tian
+        ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
     ], className="row")
 
 
