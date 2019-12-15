@@ -45,7 +45,8 @@ def page_header():
         Cangcheng Tang, 
         Guanzhong Chen, 
         Zhujun Shen, 
-        Jiayuan Tian
+        Jiayuan Tian, 
+        [About Page](https://docs.google.com/document/d/1k4v4rgel3_xJdulQ0ch_x7ybQcCo2DULQ81QOnYUShU/edit)
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
     ], className="row")
 
