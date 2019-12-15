@@ -105,16 +105,16 @@ def what_if_tool():
     """
     return html.Div(children=[
 
-        html.Div(children=[dcc.Graph(id='wind-rose-figure')], className='nine columns'),
+        html.Div(children=[dcc.Graph(id='wind-rose-figure')], className='seven columns'),
 
         html.Div(children=[
-            html.H5("Wind Rose Days Before", style={'marginTop': '2rem'}),
+            html.H5("Days to Inspect", style={'marginLeft': '14.5rem', 'marginTop': '2rem'}),
 
             html.Div(children=[
                 dcc.Slider(id='wind-rose-slider', min=int(df['sol_day'][0]), max=int(df['sol_day'][6]), value = int(df['sol_day'][0]), step=1, 
                             marks={df['sol_day'][i] :df['sol_day'][i] for i in [0,1,2,3,4,5,6]})
-            ], style={'marginTop': '3rem'})
-        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+            ], style={'marginTop': '3rem', 'marginLeft': 10})
+        ], className='five columns', style={'marginLeft': 5, 'marginTop': '10%'}),
 
         html.Div(children=[
             html.H5("Weather Prediction", style={'marginTop': '2rem'}),
