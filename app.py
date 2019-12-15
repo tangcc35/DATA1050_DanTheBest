@@ -32,7 +32,7 @@ def page_header():
     """
     return html.Div(id='header', children=[
         html.Div([html.H3('How\'s the weather on Mars')],
-                 className="ten columns", style={'color': '#5DBCD2'}),
+                 className="ten columns", style={'color': '#5DBCD2'}), 
         html.A([html.Img(id='logo', src=app.get_asset_url('github.png'),
                          style={'height': '35px', 'paddingTop': '7%'}),
                 html.Span('MarsWeather', style={'fontSize': '2rem', 'height': '35px', 'bottom': 0,
@@ -65,7 +65,9 @@ def description():
           
 
         ### Our Goals
-        Given the historical data of weather on Mars, we want to be able to predict the atmosphere temperature and pressure 1 to 3 days 
+        # TODO: Change goals
+        Given the historical data of weather on Mars, we want to provide useful  analyzed wind directions of previous seven sol days, and predicted 
+        the atmosphere temperature and pressure 1 to 3 days 
         from now. At the end of the project, we are expected to gain insights into the weather patterns of Mars and to generate predictions 
         of the weather on Mars to provide more convenience for astronauts, detectors and astronomical research.  
           
