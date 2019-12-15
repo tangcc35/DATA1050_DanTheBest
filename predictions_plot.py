@@ -6,7 +6,7 @@ def predict_plots(step, df):
     main_keys = df['sol_day'].values
     model = pickle.load(open("VAR_model_2.sav", "rb"))
     sol_days_pred = [int(main_keys[-1]) + i for i in range(0, step + 1)]    # Sol days to predict
-    pred = model.forecast_interval(df.iloc[-3:, 2:5].values, step)    # Predictions needed
+    pred = model.forecast_interval(df[['min_temp', 'max_temp', 'pressure']].iloc[-3:].values, step)    # Predictions needed
     prev_max_temp = list(df["max_temp"])    # Previous max temperatures
     max_temp_dic = {}    # Record predicted max temperature and confidence intervals
     

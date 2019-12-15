@@ -25,6 +25,7 @@ app.layout = html.Div([
     dash.dependencies.Output('what-if-figure', 'figure'),
     [dash.dependencies.Input('wind-rose-slider', 'value')])
 def prediction(step):
+    print(df['pressure'])
     return predict_plots(step, df)
 
 
