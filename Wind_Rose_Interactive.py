@@ -14,14 +14,14 @@ df = read_data()
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
-    dcc.Graph(id='what-if-figure'),
+    dcc.Graph(id='wind-rose-figure'),
     dcc.Slider(id='wind-rose-slider', min=int(df['sol_day'][0]), max=int(df['sol_day'][6]), value = int(df['sol_day'][0]), step=1, 
                 marks={df['sol_day'][i] :df['sol_day'][i] for i in [0,1,2,3,4,5,6]})
 ])
 
 
 @app.callback(
-    dash.dependencies.Output('what-if-figure', 'figure'),
+    dash.dependencies.Output('wind-rose-figure', 'figure'),
     [dash.dependencies.Input('wind-rose-slider', 'value')])
 def wind_rose(day):
     df = read_data()

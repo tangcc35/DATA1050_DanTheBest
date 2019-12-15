@@ -11,3 +11,4 @@ ipywidgets
 notebook
 expiringdict
 statsmodels
+dash_dangerously_set_inner_html

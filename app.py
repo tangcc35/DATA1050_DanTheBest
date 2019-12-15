@@ -10,6 +10,8 @@ pio.templates.default = "plotly_dark"
 
 from read_data import read_data
 from write_data import write_data
+from predictions_plot import predict_plots
+import dash_dangerously_set_inner_html
 
 # Definitions of constants. This projects uses extra CSS stylesheet at `./assets/style.css`
 COLORS = ['rgb(67,67,67)', 'rgb(115,115,115)', 'rgb(49,130,189)', 'rgb(189,189,189)']
@@ -68,40 +70,6 @@ def description():
         **updates every 5 minutes**. 
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
-
-# TODO: later
-def static_stacked_trend_graph(stack=False):
-    """
-    Returns scatter line plot of all power sources and power load.
-    If `stack` is `True`, the 4 power sources are stacked together to show the overall power
-    production.
-    """
-    
-    write_data()
-    df = read_data()
-    if df is None:
-        return go.Figure()
-    sources = ['Wind', 'Hydro', 'Fossil/Biomass', 'Nuclear']
-    x = df['Datetime']
-    fig = go.Figure()
-    for i, s in enumerate(sources):
-        fig.add_trace(go.Scatter(x=x, y=df[s], mode='lines', name=s,
-                                 line={'width': 2, 'color': COLORS[i]},
-                                 stackgroup='stack' if stack else None))
-    fig.add_trace(go.Scatter(x=x, y=df['Load'], mode='lines', name='Load',
-                             line={'width': 2, 'color': 'orange'}))
-    title = 'Energy Production & Consumption under BPA Balancing Authority'
-    if stack:
-        title += ' [Stacked]'
-    fig.update_layout(template='plotly_dark',
-                      title=title,
-                      plot_bgcolor='#23272c',
-                      paper_bgcolor='#23272c',
-                      yaxis_title='MW',
-                      xaxis_title='Date/Time')
-    return fig
-
-
 def what_if_description():
     """
     Returns description of "What-If" - the interactive component
@@ -127,23 +95,30 @@ def what_if_tool():
     demand-supply plot and rescale sliders.
     """
     return html.Div(children=[
-        html.Div(children=[dcc.Graph(id='what-if-figure')], className='nine columns'),
+
+        html.Div(children=[dcc.Graph(id='wind-rose-figure')], className='nine columns'),
 
         html.Div(children=[
-            html.H5("Days Ahead", style={'marginTop': '2rem'}),
-
-            html.Div(children=[
-                dcc.Slider(id='weather-predictor-slider', min=1, max=5, step=1, value=0,
-                           className='row', marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '3rem'}),
+            html.H5("Wind Rose Days Before", style={'marginTop': '2rem'}),
 
             html.Div(children=[
                 dcc.Slider(id='wind-rose-slider', min=int(df['sol_day'][0]), max=int(df['sol_day'][6]), value = int(df['sol_day'][0]), step=1, 
                             marks={df['sol_day'][i] :df['sol_day'][i] for i in [0,1,2,3,4,5,6]})
-            ], style={'marginTop': '3rem'}),
+            ], style={'marginTop': '3rem'})
+        ], className='row eleven columns'),
 
-            html.Div(id='hydro-scale-text', style={'marginTop': '1rem'}),
+        html.Div(children=[
+            html.H5("Weather Prediction", style={'marginTop': '2rem'}),
+            html.H5("Days Ahead", style={'marginTop': '2rem'}),
+
+            html.Div(children=[
+                dcc.Slider(id='predictor-slider', min=0, max=5, value = 1, step=1,
+                            marks={str(i): str(i) for i in [0,1,2,3,4,5]})
+            ], style={'marginTop': '3rem'}),
         ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+
+        html.Div(children=[dcc.Graph(id='predictor-figure')], className='nine columns'),
+
     ], className='row eleven columns')
 
 
@@ -173,16 +148,23 @@ def architecture_summary():
         ''')
     ], className='row')
 
+def summary_plot():
+    """
+    Summary plot for weather on Mars in the past seven days
+    """
+    return html.Div(children=[
+        dash_dangerously_set_inner_html.DangerouslySetInnerHTML("""
+    <iframe src='https://mars.nasa.gov/layout/embed/image/insightweather/' 
+    width='1040' height='610'  scrolling='no' frameborder='0'></iframe>
+    """)], style={'paddingLeft': '5%'})
+
 
 # Sequentially add page components to the app's layout
-
-
 app.layout = html.Div([
     page_header(),
     html.Hr(),
     description(),
-    # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
-    # dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
+    summary_plot(),
     what_if_description(),
     what_if_tool(),
     architecture_summary(),
@@ -192,23 +174,21 @@ app.layout = html.Div([
 # Defines the dependencies of interactive components
 
 @app.callback(
-    dash.dependencies.Output('hydro-scale-text', 'children'),
-    [dash.dependencies.Input('hydro-scale-slider', 'value')])
-def update_hydro_sacle_text(value):
-    """Changes the display text of the hydro slider"""
-    return "Hydro Power Scale {:.2f}x".format(value)
+    dash.dependencies.Output('predictor-figure', 'figure'),
+    [dash.dependencies.Input('predictor-slider', 'value')])
+def prediction(step):
+    return predict_plots(step, df)
 
 
 _what_if_data_cache = None
 
 
 @app.callback(
-    dash.dependencies.Output('what-if-figure', 'figure'),
+    dash.dependencies.Output('wind-rose-figure', 'figure'),
     [dash.dependencies.Input('wind-rose-slider', 'value')])
 def wind_rose(day):
-    cond = df["sol_day"] == str(day)
-    wind_data = df["wind"][cond].to_dict()[day - 365]
-    df_wind = pd.DataFrame.from_dict(wind_data, orient="index")
+    df = read_data()
+    df_wind = pd.DataFrame.from_dict(df["wind"][df["sol_day"] == str(day)].values[0], orient='index')
     fig = px.bar_polar(df_wind, r="ct", theta="compass_degrees",  
                        color_discrete_sequence= px.colors.sequential.Plasma[-2::-1], 
                        width=600, height=600)
@@ -216,7 +196,7 @@ def wind_rose(day):
         title={
             'text': f"Wind Rose Chart of Sol Day {str(day)}",
             'y':0.98,
-            'x':0.53,
+            'x':0.52,
             'xanchor': 'center',
             'yanchor': 'top'})
 

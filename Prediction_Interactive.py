@@ -16,14 +16,15 @@ df = read_data()
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
-    dcc.Graph(id='what-if-figure'),
-    dcc.Slider(id='wind-rose-slider', min=0, max=5, value = 1, step=1)
+    dcc.Graph(id='predictor-figure'),
+    dcc.Slider(id='predictor-slider', min=0, max=5, value = 1, step=1,
+                marks={str(i): str(i) for i in [0,1,2,3,4,5]})
 ])
 
 
 @app.callback(
-    dash.dependencies.Output('what-if-figure', 'figure'),
-    [dash.dependencies.Input('wind-rose-slider', 'value')])
+    dash.dependencies.Output('predictor-figure', 'figure'),
+    [dash.dependencies.Input('predictor-slider', 'value')])
 def prediction(step):
     print(df['pressure'])
     return predict_plots(step, df)
