@@ -42,7 +42,6 @@ def predict_plots(step, df):
                          fill='tonexty', 
                          line_color='rgba(255, 102, 163, 0.2)', 
                          fillcolor='rgba(255, 102, 163, 0.2)'), row=1, col=1)
-    fig.update_xaxes(title_text="Sol Day", row=1, col=1)
     fig.update_yaxes(title_text="Degrees of Celcius", row=1, col=1)
     
     # plot min temperature
@@ -73,7 +72,6 @@ def predict_plots(step, df):
                          fill='tonexty', 
                          line_color='rgba(102, 181, 255, 0.2)', 
                          fillcolor='rgba(102, 181, 255, 0.2)'), row=2, col=1)
-    fig.update_xaxes(title_text="Sol Day", row=2, col=1)
     fig.update_yaxes(title_text="Degrees of Celcius", row=2, col=1)
     
     # plot avg temperature
@@ -107,7 +105,7 @@ def predict_plots(step, df):
     fig.update_xaxes(title_text="Sol Day", row=3, col=1)
     fig.update_yaxes(title_text="Pascal", row=3, col=1)
     
-    fig.update_layout(width=1200, height=600, plot_bgcolor='#23272c', paper_bgcolor='#23272c')
+    fig.update_layout(width=1200, height=620, plot_bgcolor='#23272c', paper_bgcolor='#23272c')
     
     return fig
  
