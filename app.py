@@ -6,7 +6,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
-pio.templates.default = "plotly_dark"
 
 from read_data import read_data
 from write_data import write_data
@@ -16,6 +15,8 @@ import dash_dangerously_set_inner_html
 # Definitions of constants. This projects uses extra CSS stylesheet at `./assets/style.css`
 COLORS = ['rgb(67,67,67)', 'rgb(115,115,115)', 'rgb(49,130,189)', 'rgb(189,189,189)']
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', '/assets/style.css']
+
+pio.templates.default = "plotly_dark"
 
 df = read_data()
 # Define the dash app first
@@ -105,7 +106,7 @@ def what_if_tool():
                 dcc.Slider(id='wind-rose-slider', min=int(df['sol_day'][0]), max=int(df['sol_day'][6]), value = int(df['sol_day'][0]), step=1, 
                             marks={df['sol_day'][i] :df['sol_day'][i] for i in [0,1,2,3,4,5,6]})
             ], style={'marginTop': '3rem'})
-        ], className='row eleven columns'),
+        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
 
         html.Div(children=[
             html.H5("Weather Prediction", style={'marginTop': '2rem'}),
@@ -115,7 +116,8 @@ def what_if_tool():
                 dcc.Slider(id='predictor-slider', min=0, max=5, value = 1, step=1,
                             marks={str(i): str(i) for i in [0,1,2,3,4,5]})
             ], style={'marginTop': '3rem'}),
-        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+        ], className='row eleven columns'),
+        #className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}
 
         html.Div(children=[dcc.Graph(id='predictor-figure')], className='nine columns'),
 
@@ -194,11 +196,13 @@ def wind_rose(day):
                        width=600, height=600)
     fig.update_layout(
         title={
-            'text': f"Wind Rose Chart of Sol Day {str(day)}",
+            'text': f"Wind Rose Chart of Sol Day {day}",
             'y':0.98,
             'x':0.52,
             'xanchor': 'center',
-            'yanchor': 'top'})
+            'yanchor': 'top'},
+        plot_bgcolor='#23272c',
+        paper_bgcolor='#23272c')
 
     return fig
 
