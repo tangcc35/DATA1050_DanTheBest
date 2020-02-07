@@ -1,5 +1,8 @@
 # DATA1050_DanTheBest
-This project concerns the weather on Mars. Our goal is to make visualizations and predictions of temperature and pressure on Mars. We make predictions using Vector Autoregression (VAR) Time Series on max and min temperature along with pressure. For visualization, we make graph of wind rose and line graph. Line graph shows the confidence interval of the prediction. Users can use sliders to check the visualizations of a specific date. For reproductivity purpose, we show the versions of packages we are using:
+
+This project concerns the weather on Mars. Main functions of the dashboard is in app.py. Run it to show our analysis and predictions.  
+
+Our goal is to make visualizations and predictions of temperature and pressure on Mars. We make predictions using Vector Autoregression (VAR) Time Series on max and min temperature along with pressure. For visualization, we make graph of wind rose and line graph. Line graph shows the confidence interval of the prediction. Users can use sliders to check the visualizations of a specific date. For reproductivity purpose, we show the versions of packages we are using:
 
 - Dash: 1.7.0
 - Matplotlib: 3.1.2
