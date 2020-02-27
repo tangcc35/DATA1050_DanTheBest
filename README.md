@@ -1,4 +1,4 @@
-# DATA1050_DanTheBest
+# DATA1050_DanTheBest ![](https://img.shields.io/badge/python-3.7+-blue.svg)
 
 This project concerns the weather on Mars. Main functions of the dashboard is in app.py. Run it to show our analysis and predictions.  
 
