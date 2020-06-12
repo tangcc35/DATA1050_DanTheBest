@@ -2,7 +2,7 @@
 
 This project concerns the weather on Mars. Main functions of the dashboard is in app.py. 
 
-*You can run it on (GitPod)[https://www.gitpod.io/], give it some time untill portal 1050 pops up, our analysis and predictions are in that page.*  
+*You can run it on [GitPod](https://www.gitpod.io/), give it some time untill portal 1050 pops up, our analysis and predictions are in that page.*  
 
 Our goal is to make visualizations and predictions of temperature and pressure on Mars. We make predictions using Vector Autoregression (VAR) Time Series on max and min temperature along with pressure. For visualization, we make graph of wind rose and line graph. Line graph shows the confidence interval of the prediction. Users can use sliders to check the visualizations of a specific date. For reproductivity purpose, we show the versions of packages we are using:
 
